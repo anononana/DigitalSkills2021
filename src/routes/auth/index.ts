@@ -19,12 +19,13 @@ router.post('/login', async (ctx: any) => {
           password: body.password
       }
   })
- const f = crypto.randomBytes(20).toString()
+  const exp = new Date()
+  exp.setHours(exp.getHours() + 2)
   if(user) {
       const accessToken = await Token.create({
           value: crypto.randomBytes(20).toString('hex'),
           userId: user.id,
-          expiresAt: new Date().setHours(new Date().getHours() + 2)
+          expiresAt: exp
       })
       return ctx.body = {success:true, accessToken: accessToken.value}
   }

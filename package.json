@@ -10,7 +10,8 @@
     "migrations-up": "npx sequelize-cli db:create && npx sequelize-cli db:migrate",
     "migrations-down": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:drop",
     "seeds-up": "npx sequelize-cli db:seed:all",
-    "seeds-down": "npx sequelize-cli db:seed:undo:all"
+    "seeds-down": "npx sequelize-cli db:seed:undo:all",
+    "postinstall": "npx patch-package"
   },
   "author": "",
   "license": "ISC",

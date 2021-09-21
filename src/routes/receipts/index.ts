@@ -11,7 +11,7 @@ const router = new Router();
 
 router.prefix('/receipt');
 
-router.get('/', checkLogin,async (ctx: any) => {
+router.post('/', checkLogin,async (ctx: any) => {
   const user = await User.findOne({
     where: {
       id: ctx.user
@@ -20,7 +20,8 @@ router.get('/', checkLogin,async (ctx: any) => {
   const receipts = await Receipt.findAll({
     where: {
       userId: ctx.user
-    }
+    },
+    order: [['printDate', 'DESC']]
   })
   ctx.body = {receipts: receipts, userLimit: user!.limit}
 });
@@ -43,7 +44,31 @@ router.post('/filter', checkLogin, async(ctx: any) => {
   ctx.body = {receipts}
 })
 
-router.post('/', checkLogin, async(ctx:any) => {
+router.post('/analyze', checkLogin, async(ctx:any) => {
+  const analyzedDate = new Date()
+  analyzedDate.setMonth(analyzedDate.getMonth() - 1)
+  const user = await User.findOne({
+    where: {
+      id: ctx.user
+    }
+  });
+  const receipts = await Receipt.findAll({
+    where: {
+      userId: ctx.user,
+      printDate: {
+        [Op.between]: [analyzedDate, new Date()]
+      }
+    }
+  })
+  let sum = 0
+  receipts.forEach(element => {
+    sum += element.sum
+  });
+  ctx.body={spentMoney: sum, leftover: user!.limit - sum}
+
+});
+
+router.post('/create', checkLogin, async(ctx:any) => {
   const body = ctx.request.body
   const receipt = await Receipt.create({
     sum: body.sum,

@@ -1,0 +1,19 @@
+.center_m{
+    margin: auto!important;
+}
+.one_tab{
+   
+   
+}
+.carousel-slider{
+    height: 600px!important;
+}
+th, td{
+    text-align: center!important;
+}
+#au2 .input-field{
+    margin-bottom: 0!important;
+}
+.carousel-item{
+    overflow: auto;
+}

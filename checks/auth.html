@@ -1,0 +1,403 @@
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css/materialize/css/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://materializecss.com/css/ghpages-materialize.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+    <script src="js/session.js"></script>
+<script>
+     $(document).ready(function(){
+
+     var ind_lim=1;
+      var limit = 200;
+      
+
+
+
+        var files;
+        $('#file_t').change(function(){
+    files = this.files;
+});
+
+
+       $('.ident_check').on( 'click', function( event ){ 
+         
+        event.stopPropagation(); 
+    event.preventDefault();  
+ 
+    var data = new FormData();
+    $.each( files, function( key, value ){
+        data.append( key, value );
+    });
+        
+    $.ajax({
+        url: 'http://andreifarafonow.duckdns.org/Home/GetCheckInfo',
+        method: 'POST',
+        data: data,
+        cache: false,
+        dataType: 'json',
+        processData: false, 
+        contentType: false, 
+        success: function(data){   
+		alert(data);            
+	}
+});
+    });
+
+
+
+
+
+
+    $('#input').on( 'click', function( event ){ 
+
+        var log = $('#login').val();
+        var pass = $('#password').val();
+
+
+
+        $.ajax({
+	url: 'http://localhost:4000/auth/login',         
+	method: 'post',             
+	dataType: 'json',         
+	data: {login: log, password: pass},   
+	success: function(data){ 
+     
+   // localStorage.session=data[Object.keys(data)[1]];
+    
+    localStorage.setItem('session', data[Object.keys(data)[1]]);
+    
+    $.session.set("token", data[Object.keys(data)[1]]);
+  
+    
+   location.reload();
+     //$('.his').click();
+    // $('.his').click();   
+    
+	}
+});
+    });
+
+
+
+
+    $('#rega').on( 'click', function( event ){ 
+
+var login = $('#login1').val();
+var password = $('#password1').val();
+var name = $('#name1').val();
+var surname = $('#fam1').val();
+var limit_start = $('#limit1').val();
+
+$.ajax({
+url: 'http://localhost:4000/auth/register',         
+method: 'post',             
+dataType: 'json',         
+data: {login: login, password: password, name : name, surname : surname, limit: limit_start, accessToken: "84d7f2f56031cb97bff5cf861985dc0a63bb6b1d"},   
+success: function(data){ 
+alert('Вы успешно зарегистрировались!');  
+
+}
+});
+});
+
+
+
+$('#analyte').on( 'click', function( event ){ 
+
+var at = localStorage.session;
+
+      $.ajax({
+//	url: 'http://localhost:4000/receipt?accessToken='+localStorage.session,    
+  url: 'http://localhost:4000/receipt/analyze',       
+	method: 'post',             
+	dataType: 'json',         
+	data: {accessToken: at},   
+	success: function(data){ 
+     var kash = data[Object.keys(data)[0]];
+     var limit_ost = data[Object.keys(data)[1]];
+ alert('Потрачено:'+kash+' Остаток: '+limit_ost);
+  
+}
+  //  localStorage.session=data[Object.keys(data)[1]];
+  //   alert(localStorage.session); 
+});
+
+});
+    
+
+
+
+
+
+
+
+
+    $('.his').on( 'click', function( event ){ 
+
+//var at = localStorage.session;
+var at = localStorage.getItem('session');
+
+      $.ajax({
+//	url: 'http://localhost:4000/receipt?accessToken='+localStorage.session,    
+  url: 'http://localhost:4000/receipt',       
+	method: 'post',             
+	dataType: 'json',         
+	data: {accessToken: at},   
+	success: function(data){ 
+   
+   
+   //  alert(data[Object.keys(data)[1]]);
+     var result = data[Object.keys(data)[0]];
+     limit = data[Object.keys(data)[1]];
+   //  alert(result);
+  
+  var str_res = JSON.stringify(result);
+  var html = '<table border="1">';
+    html+=  '<th> # </th><th> Сумма </th><th> Дата </th>';
+    for (let i = 0; i < result.length; i++) {
+				html += '<tr>';
+          html += '<td>' + (i+1) + '</td>';
+				html += '<td>' + result[i].sum + '</td>';
+				html += '<td>' + result[i].printDate + '</td>';
+				html += '</tr>';
+        //alert(result[i].sum);
+  }
+html += '</table>';
+$('.table').html(html);
+if (ind_lim != 0) {
+     $('.listprice').append(' '+limit);
+     ind_lim = 0;
+}
+
+  //  localStorage.session=data[Object.keys(data)[1]];
+  //   alert(localStorage.session); 
+      
+	}
+});
+    });
+
+
+
+    $('#date_filter').on( 'click', function( event ){ 
+var start = $('#start').val();
+var end= $('#end').val();
+
+//var at = localStorage.session;
+var at = localStorage.getItem('session');
+      $.ajax({
+//	url: 'http://localhost:4000/receipt?accessToken='+localStorage.session,    
+  url: 'http://localhost:4000/receipt/filter',       
+	method: 'post',             
+	dataType: 'json',         
+	data: {accessToken: at, start: start, end: end},   
+	success: function(data){ 
+   
+   
+   //  alert(data[Object.keys(data)[1]]);
+     var result = data[Object.keys(data)[0]];
+     limit = data[Object.keys(data)[1]];
+   //  alert(result);
+  var str_res = JSON.stringify(result);
+  var html = '<table border="1">';
+    html+=  '<th> # </th><th> Сумма </th><th> Дата </th>';
+    for (let i = 0; i < result.length; i++) {
+				html += '<tr>';
+          html += '<td>' + (i+1) + '</td>';
+				html += '<td>' + result[i].sum + '</td>';
+				html += '<td>' + result[i].printDate + '</td>';
+				html += '</tr>';
+        //alert(result[i].sum);
+  }
+html += '</table>';
+$('.table').html(html);
+if (ind_lim != 0) {
+     $('.listprice').append(' '+limit);
+     ind_lim = 0;
+}
+
+  //  localStorage.session=data[Object.keys(data)[1]];
+  //   alert(localStorage.session); 
+      
+	}
+});
+    });
+   
+
+
+
+
+
+
+
+     });
+</script>
+
+</head>
+<body>
+
+    <div class="row">
+        <div class="col s12">
+          <ul class="tabs">
+              
+            <li class="tab col s4"><a href="#main">Загрузка чека</a></li>
+            <li class="tab col s4"><a  href="#auth">Авторизация</a></li>
+            <li class="tab col s4"><a href="#history" class=his>История</a></li>
+         
+          </ul>
+        </div>
+
+
+
+
+
+
+
+
+     <!--Главная-->
+        <div id=main class="col s12 one_tab">
+            <div style='margin:auto; text-align: center;'>
+            <h2>Загрузить чек</h2><!-- Поправить!! -->
+           
+      <input class='lstor' value='' hidden/>
+              <iframe src=out.html style='width:100%; border:none; min-height: 355px;    min-height: 500px;'>
+
+              </iframe> 
+
+            
+
+
+        </div>
+   </div>
+   <!--Главная-->
+
+         
+        <div id="auth" class="col s12 one_tab">  
+            
+            
+
+
+              <!-- Авторизация -->     
+            <div class="row container center_m">
+            <div class="row">
+                <div class="col s12">
+                  <ul class="tabs">
+                      
+                    <li class="tab col s6"><a class=active href="#au1">Авторизация</a></li>
+                    <li class="tab col s6" style='display:none;'><a href="#au2">Регистрация</a></li>
+
+                    </ul>
+                
+                    <div id="au1" class="col s12 one_tab">
+            <h2>Авторизация</h2>
+          <!--  <form class="col s12" action='' method=post> -->
+        <div class="row">
+            <div class="input-field col s12">
+              <input id="login" type="text" class="validate" placeholder="login" name=login>       
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <input id="password" type="password" class="validate" placeholder="пароль" name=password>
+              
+            </div>
+          </div>
+          <button type=submit class="waves-effect waves-light btn" id=input>Войти</button>
+   <!-- </form>-->
+    </div>
+</div>
+</div>
+      <!-- Авторизация -->
+ 
+
+
+   <!-- Регистрация -->
+ <div id=au2 class='rega'>
+    <h2>Регистрация</h2>
+    <form class="col s12" method=post action=''>
+<div class="row">
+    <div class="input-field col s12">
+      <input id="login1" type="text" class="validate" placeholder="login" name=login>       
+    </div>
+ 
+    <div class="input-field col s12">
+        <input id="password1" type="password" class="validate" placeholder="Пароль" name=pass>
+        
+     </div> 
+   
+  
+  
+  <div class="input-field col s12">
+    <input id="fam1" type="text" class="validate" placeholder="Фамилия" name=surname>
+    
+ 
+</div>
+
+
+  <div class="input-field col s12">
+    <input id="name1" type="text" class="validate" placeholder="Имя" name=pass>
+    
+</div>
+<div class="input-field col s12">
+  <input id="limit1" type="text" class="validate" placeholder="Лимит" name=pass>
+  
+</div>
+
+ 
+   
+  <button type=submit class="waves-effect waves-light btn" id=rega>Регистрация</button>
+</form>
+</div>
+ </div> 
+
+
+</div>
+ <!-- Регистрация -->
+
+
+
+        <div id="history" class="col s12 one_tab">
+            <div class=container>
+              <h2><span class=listprice>Оставшийся лимит: </span> рублей</h2>
+              <button class='waves-effect waves-light btn' id=analyte>Аналитика</button>
+              <h2>Фильтр</h2>
+              <div class="row">
+                <div class="col s12">
+                 
+           <input type=datetime-local class='col s5' id=start> 
+              <input type=datetime-local class='col offset-s2 s5' id=end>
+              <button class='waves-effect waves-light btn' id=date_filter>Филтровать по датам</button>
+
+              </div>
+
+             <div class='table col s12' style="text-align: center;">
+
+         </div> 
+              </div>
+         
+
+
+            </div>
+
+        </div>
+        
+   
+
+</div>       
+
+
+
+     
+      <script>
+        $(document).ready(function(){
+            $('.tabs').tabs({ 'swipeable': true });
+            $('.tabs_reg').tabs({ 'swipeable': true });
+          });
+        </script> 
+
+        
+</body>

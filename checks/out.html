@@ -1,0 +1,101 @@
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="css/materialize/css/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://materializecss.com/css/ghpages-materialize.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="js/session.js"></script>
+
+
+<script>
+  $(document).ready(function(){
+$('#input').on( 'click', function( event ){ 
+
+var sum = $('#first_name').val();
+var date = $('#first_name1').val();
+var at = $.session.get("token");
+
+
+$.ajax({
+url: 'http://localhost:4000/receipt/create',         
+method: 'post',             
+dataType: 'json',         
+data: {sum: sum, date: date, accessToken: at},   
+success: function(data){ 
+alert('Чек добавлен!');  
+}
+});
+});
+
+  });
+</script>
+
+
+
+
+
+
+<form method="post" action="http://andreifarafonow.duckdns.org/Home/GetCheckInfo" enctype="multipart/form-data"> 
+    <div class="file-field input-field">
+      <div class="btn-floating btn-large waves-effect waves-light red" style='width: 54px;
+      height: 52px; margin-left: calc(50% - 25px); margin-bottom: 50px;'>
+        <span><i class="material-icons">add</i></span>
+        <input type="file" name="img" accept="image/*" placeholder="Фото чека" id=file_t>
+      </div>
+      <div class="file-path-wrapper">  
+      </div>
+    </div> <br>
+     <button style='margin-left: calc(50% - 75px);' type="submit" name="commit" value="Распознать чек" class='ident_check waves-effect waves-light btn'>Распознать чек</button>
+  </form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="row">
+   <!-- <form class="col s12" method="POST" action=http://andreifarafonow.duckdns.org:4000/receipt > -->
+      <div class="row">
+<div class="input-field col s6">
+    <input placeholder="сумма" id="first_name" type="text" class="validate" name=sum>
+    <label for="first_name">Сумма</label>
+  </div>
+  <div class="input-field col s6">
+      
+    <input placeholder="" id="first_name1" type="datetime-local" class="datepicker1" name=date>
+   
+  </div>
+
+
+
+
+
+  <div class="input-field col s4">
+    <input placeholder="время" id="first_name4" type="text" class="validate" name=accessToken hidden>
+   
+  </div>
+
+  </div>
+
+  <button  style='position: absolute;
+  top: 250;
+  left: calc(50% - 90px);' id=input type="submit" name="commit" value="Распознать чек" class='ident_check waves-effect waves-light btn'>Отправить данные</button>
+ <!-- </form>-->
+
+
+  </div>
+  <script>
+  $(document).ready(function(){
+    $('.datepicker').datepicker();
+    $('.timepicker').timepicker();
+  });
+  </script>

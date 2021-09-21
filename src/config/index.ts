@@ -24,6 +24,7 @@ const config = {
         password: process.env.DB_USER_PASS,
         storage: ':memory:',
         models: [resolve(`${process.cwd()}/src/db/models/**/*.model.ts`)],
+        logging: false
     } as SequelizeOptions
 }
 

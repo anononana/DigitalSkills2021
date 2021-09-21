@@ -10,17 +10,17 @@ import User from '../User/User.model';
   })
   class Token extends Model<Token> {
     @Column(DataType.STRING)
-    value!: string;
+    value?: string;
   
     @ForeignKey(()=> User)
     @Column(DataType.INTEGER)
-    userId!: number;
+    userId?: number;
   
     @Column(DataType.DATE)
-    expiresAt!: Date;
+    expiresAt?: Date;
   
     @BelongsTo(() => User, 'userId')
-    user!: User;
+    user?: User;
   }
   
   export default Token;

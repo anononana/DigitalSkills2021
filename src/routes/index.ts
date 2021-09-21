@@ -1,7 +1,7 @@
 import Router from 'koa-router';
 
 import auth from './auth';
-// import user from './user'
+import receipt from './receipts'
 
 const router = new Router();
 
@@ -12,6 +12,6 @@ router.get('/', (ctx: any) => {
 });
 
 router.use(auth.routes());
-// router.use(user.routes());
+router.use(receipt.routes());
 
 export default router;

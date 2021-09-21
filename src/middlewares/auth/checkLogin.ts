@@ -12,9 +12,8 @@ export default async (ctx: any, next: Next) => {
   }
 
   if (!token) {
-    ctx.throw(401,'Нет токена в заголовке');
+    return ctx.throw(401,'Нет токена в заголовке');
   }
-  const user = await User.findAll();
   const verify = await Token.findOne({
       where: {
           value: token
@@ -22,9 +21,9 @@ export default async (ctx: any, next: Next) => {
   });
 
   if(!verify) {
-    ctx.throw(403,'Токен недействителен');
+    return ctx.throw(403,'Токен недействителен');
   }
-
+  console.log(verify.userId)
   ctx.user = verify!.userId;
 
   await next();

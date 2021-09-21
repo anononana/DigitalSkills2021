@@ -1,5 +1,6 @@
 import Router from 'koa-router';
 import Receipt from '../../db/models/Receipt/Receipt.model';
+import User from '../../db/models/User/User.model';
 import { checkLogin } from '../../middlewares/auth';
 
 // import auth from './auth';
@@ -10,11 +11,17 @@ const router = new Router();
 router.prefix('/receipt');
 
 router.get('/', checkLogin,async (ctx: any) => {
-  ctx.body = await Receipt.findAll({
+  const user = await User.findOne({
+    where: {
+      id: ctx.user
+    }
+  });
+  const receipts = await Receipt.findAll({
     where: {
       userId: ctx.user
     }
   })
+  ctx.body = {receipts: receipts, userLimit: user!.limit}
 });
 
 router.post('/', checkLogin, async(ctx:any) => {

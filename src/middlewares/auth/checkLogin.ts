@@ -7,12 +7,12 @@ import User from '../../db/models/User/User.model';
 export default async (ctx: any, next: Next) => {
   let token: string | undefined = undefined;
 
-  if (ctx.request.headers && ctx.request.headers['authorization']) {
-    token = ctx.request.headers['authorization'].split('Bearer ')[1];
+  if (ctx.request.body.accessToken) {
+    token = ctx.request.body.accessToken;
   }
 
   if (!token) {
-    return ctx.throw(401,'Нет токена в заголовке');
+    return ctx.throw(401,'Нет токена в запросе');
   }
   const verify = await Token.findOne({
       where: {
@@ -23,7 +23,6 @@ export default async (ctx: any, next: Next) => {
   if(!verify) {
     return ctx.throw(403,'Токен недействителен');
   }
-  console.log(verify.userId)
   ctx.user = verify!.userId;
 
   await next();

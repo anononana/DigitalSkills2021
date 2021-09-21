@@ -1,0 +1,39 @@
+{
+  "name": "dskazan",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.ts",
+  "scripts": {
+    "test": "start",
+    "start": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/app.ts",
+    "build": "tsc -p .",
+    "migrations-up": "npx sequelize-cli db:create && npx sequelize-cli db:migrate",
+    "migrations-down": "npx sequelize-cli db:migrate:undo:all",
+    "seeds-up": "npx sequelize-cli db:seed:all",
+    "seeds-down": "npx sequelize-cli db:seed:undo:all"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@koa/cors": "^3.1.0",
+    "@types/koa-bodyparser": "^4.3.3",
+    "@types/koa-router": "^7.4.4",
+    "@types/koa__cors": "^3.0.3",
+    "@types/node": "^16.9.4",
+    "nodemon": "^2.0.12",
+    "sequelize-cli": "^6.2.0",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "@types/validator": "^13.6.3",
+    "dotenv": "^10.0.0",
+    "koa": "^2.13.1",
+    "koa-bodyparser": "^4.3.0",
+    "koa-cors": "0.0.16",
+    "koa-router": "^10.1.1",
+    "pg": "^8.7.1",
+    "sequelize": "^6.6.5",
+    "sequelize-typescript": "^2.1.0"
+  }
+}

@@ -1,4 +1,5 @@
 import Router from 'koa-router';
+import {Op} from 'sequelize'
 import Receipt from '../../db/models/Receipt/Receipt.model';
 import User from '../../db/models/User/User.model';
 import { checkLogin } from '../../middlewares/auth';
@@ -23,6 +24,24 @@ router.get('/', checkLogin,async (ctx: any) => {
   })
   ctx.body = {receipts: receipts, userLimit: user!.limit}
 });
+
+router.post('/filter', checkLogin, async(ctx: any) => {
+  const body = ctx.request.body;
+  const user = await User.findOne({
+    where: {
+      id: ctx.user
+    }
+  });
+  const receipts = await Receipt.findAll({
+    where: {
+      userId: ctx.user,
+      printDate: {
+        [Op.between]: [body.start, body.end]
+      }
+    }
+  })
+  ctx.body = {receipts}
+})
 
 router.post('/', checkLogin, async(ctx:any) => {
   const body = ctx.request.body

@@ -1,6 +1,9 @@
 import {Sequelize} from 'sequelize-typescript'
 import config from '../config/index'
 import {Op} from 'sequelize'
+import User from './models/User/User.model';
+import Token from './models/Token/Token.model';
+import Receipt from './models/Receipt/Receipt.model';
 
 
 export const OP = Op;
@@ -19,5 +22,6 @@ sequelize.authenticate().then( async () => {
 }).catch((error) => {
     console.log(`Unable connect to database: ${error}`);
 });
+// sequelize.addModels([User, Token, Receipt]);
 
 export default sequelize;

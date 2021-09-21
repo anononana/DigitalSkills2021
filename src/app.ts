@@ -5,6 +5,7 @@ const Router = require('koa-router');
 import routes from './routes/index';
 import bodyParser from 'koa-bodyparser';
 import cors from '@koa/cors';
+import "./db/sequelize";
 
     const app = new Koa();
 

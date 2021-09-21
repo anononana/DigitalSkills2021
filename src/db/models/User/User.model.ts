@@ -1,6 +1,7 @@
 import { Table, Column, Model, DataType, Unique, AllowNull, Scopes,
     HasMany, ForeignKey, BelongsTo, IsEmail, Default, DefaultScope } from 'sequelize-typescript';
   import Receipt from '../Receipt/Receipt.model';
+import Token from '../Token/Token.model';
   @DefaultScope(() => ({
     attributes: {exclude: ['password']}
   }))
@@ -41,6 +42,9 @@ import { Table, Column, Model, DataType, Unique, AllowNull, Scopes,
   
     @HasMany(() => Receipt, 'userId')
     receipts!: Receipt[];
+
+    @HasMany(() => Token, 'userId')
+    tokens!: Token[];
   }
   
   export default User;

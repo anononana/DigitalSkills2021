@@ -329,15 +329,20 @@ router.post("/forecast", accessR, async (ctx: any) => {
   } else {
     now = new Date(body.targetYear, body.targetMonth, 0);
   }
-  for( var i=11; i >= 1; i--) {
+  for (var i = 11; i >= 1; i--) {
     const totaluser = await Receipt.sum("sum", {
       where: {
         printDate: {
           [Op.between]: [
-            new Date(now.getFullYear(), now.getMonth() - i, 1, now.getHours() + 3),
             new Date(
               now.getFullYear(),
-              now.getMonth() - (i -1),
+              now.getMonth() - i,
+              1,
+              now.getHours() + 3
+            ),
+            new Date(
+              now.getFullYear(),
+              now.getMonth() - (i - 1),
               0,
               now.getHours() + 3
             ),
@@ -345,21 +350,27 @@ router.post("/forecast", accessR, async (ctx: any) => {
         },
       },
     });
-    sums.push([ new Date(now.getFullYear() ,now.getMonth() - i, 0).getTime(), totaluser])
+    sums.push([
+      new Date(now.getFullYear(), now.getMonth() - i, 0).getTime(),
+      totaluser,
+    ]);
   }
-  var t     = new timeseries.main(sums);
-  var forecastDatapoint	= 11;	
+  var t = new timeseries.main(sums);
+  var forecastDatapoint = 11;
   var coeffs = t.ARMaxEntropy({
-    data:	t.data.slice(0,10)
+    data: t.data.slice(0, 10),
   });
-  t.smoother({period:4}).save('smoothed');
-  t.sliding_regression_forecast({sample:20, degree: 5});
-  var forecast	= 0;
-  for (var i=0;i<coeffs.length;i++) {
-    forecast -= t.data[10-i][1]*coeffs[i];
+  t.smoother({ period: 4 }).save("smoothed");
+  t.sliding_regression_forecast({ sample: 20, degree: 5 });
+  var forecast = 0;
+  for (var i = 0; i < coeffs.length; i++) {
+    forecast -= t.data[10 - i][1] * coeffs[i];
   }
-  var chart_url = t.chart({main:true,points:[{color:'ff0000',point:20,series:0, main: true}]});
-  ctx.body = {forecast: forecast, chart_url: chart_url}
+  var chart_url = t.chart({
+    main: true,
+    points: [{ color: "ff0000", point: 20, series: 0, main: true }],
+  });
+  ctx.body = { forecast: forecast, chart_url: chart_url };
 });
 
 export default router;

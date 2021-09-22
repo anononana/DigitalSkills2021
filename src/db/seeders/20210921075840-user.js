@@ -25,8 +25,8 @@ module.exports = {
     }, {
       login: "sdf",
       password: "123456",
-      name: 'Иван',
-      surname: 'Антонов',
+      name: 'Ivan',
+      surname: 'Antonov',
       email: 'example@example.com',
       limit: 5000,
       isAdmin: 0,
@@ -35,7 +35,7 @@ module.exports = {
     }, {
       login: "dfg",
       password: "123456",
-      name: 'Лолита Сергеева',
+      name: 'Lolita',
       surname: 'Doe',
       email: 'example@example.com',
       limit: 10000,
@@ -45,8 +45,8 @@ module.exports = {
     }, {
       login: "dfgfd",
       password: "123456",
-      name: 'Иван',
-      surname: 'Васильев',
+      name: 'Ivan',
+      surname: 'Vasiliev',
       email: 'example@example.com',
       limit: 3000,
       isAdmin: 0,
@@ -55,8 +55,8 @@ module.exports = {
     }, {
       login: "sfd",
       password: "123456",
-      name: 'Игорь',
-      surname: 'Стравинский',
+      name: 'Igor',
+      surname: 'Stravinsky',
       email: 'example@example.com',
       limit: 16000,
       isAdmin: 0,
@@ -65,8 +65,8 @@ module.exports = {
     }, {
       login: "sdfsd",
       password: "123456",
-      name: 'Оби',
-      surname: 'Ван',
+      name: 'Obi',
+      surname: 'Wan',
       email: 'example@example.com',
       limit: 18000,
       isAdmin: 0,
@@ -75,19 +75,18 @@ module.exports = {
     }, {
       login: "vvv",
       password: "123456",
-      name: 'Гендальф',
-      surname: 'Серый',
+      name: 'Gendalf',
+      surname: 'Grey',
       email: 'example@example.com',
       limit: 20000,
       isAdmin: 0,
       createdAt: new Date(),
       updatedAt: new Date() 
-    },
-    , {
+    }, {
       login: "vvv2",
       password: "123456",
-      name: 'Гендальф',
-      surname: 'Белый',
+      name: 'Gendalf',
+      surname: 'White',
       email: 'example@example.com',
       limit: 20000,
       isAdmin: 0,
@@ -96,13 +95,13 @@ module.exports = {
     }, {
       login: "vvvfd",
       password: "123456",
-      name: 'Говард',
-      surname: 'Воловиц',
+      name: 'Howard',
+      surname: 'Volovitzh',
       email: 'example@example.com',
       limit: 20000,
       isAdmin: 0,
       createdAt: new Date(),
-      updatedAt: new Date() 
+      updatedAt: new Date()
     }]);
   },
 

@@ -358,11 +358,7 @@ router.post("/forecast", accessR, async (ctx: any) => {
   for (var i=0;i<coeffs.length;i++) {
     forecast -= t.data[10-i][1]*coeffs[i];
   }
-  var processed = t.output();
-  console.log(sums)
-  console.log("forecast",forecast);
   var chart_url = t.chart({main:true,points:[{color:'ff0000',point:20,series:0, main: true}]});
-  console.log(chart_url)
   ctx.body = {forecast: forecast, chart_url: chart_url}
 });
 

@@ -188,6 +188,47 @@ router.post('/averageDaySum', accessR, async(ctx:any) => {
   ctx.body={currentMonthAvg: total / (new Date(now.getFullYear(),now.getMonth()+1, 0 ).getDate()), lastMonthAvg: totallast / (new Date(now.getFullYear(),now.getMonth(), 0 ).getDate())}
 })
 
+router.post('/userList', accessR, async(ctx:any) => {
+  var greedyUsers: Object[] = [];
+  var m: User[] = [];
+  var now: Date;
+  const body = ctx.request.body
+  if (!body.targetMonth) {
+   now = new Date()
+  } else {
+   now = new Date(body.targetYear, body.targetMonth, 0)
+  }
+  const users = await User.findAll()
+  // greedyUsers.push(...users)
+  for(var user of users) {
+    const totaluser = await Receipt.sum('sum', {
+      where: {
+        printDate: {
+          [Op.between]: [new Date(now.getFullYear(), now.getMonth() - 1, 1, now.getHours() + 3), new Date(now.getFullYear(), now.getMonth(), 0, now.getHours() + 3)]
+        },
+        userId: user.id
+      }
+    });
+    if(user.limit < totaluser) {
+      greedyUsers.push(user)
+    }
+  }
+  // users.forEach(async element => {
+  //   const totaluser = await Receipt.sum('sum', {
+  //     where: {
+  //       printDate: {
+  //         [Op.between]: [new Date(now.getFullYear(), now.getMonth() - 1, 1, now.getHours() + 3), new Date(now.getFullYear(), now.getMonth(), 0, now.getHours() + 3)]
+  //       },
+  //       userId: element.id
+  //     }
+  //   });
+  //   greedyUsers.push(element)
+  //   m.push(element)
+  // })
+  // console.log(greedyUsers)
+  ctx.body= greedyUsers
+})
+
 // router.post('/')
 
 // router.use(auth.routes());

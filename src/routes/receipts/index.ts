@@ -1,8 +1,10 @@
 import Router from 'koa-router';
-import {Op} from 'sequelize'
+import {Op, Sequelize} from 'sequelize'
 import Receipt from '../../db/models/Receipt/Receipt.model';
 import User from '../../db/models/User/User.model';
+import sequelize from '../../db/sequelize';
 import { checkLogin } from '../../middlewares/auth';
+import accessR from '../../middlewares/auth/accessR';
 
 // import auth from './auth';
 // import user from './user'
@@ -76,6 +78,114 @@ router.post('/create', checkLogin, async(ctx:any) => {
     printDate: body.date
   })
   ctx.body = {success:true, body: receipt}
+})
+
+router.post('/generalStat', accessR, async(ctx:any) => {
+  var now;
+  const body = ctx.request.body
+  if (!body.targetMonth) {
+   now = new Date()
+  } else {
+   now = new Date(body.targetYear, body.targetMonth)
+  }
+  const receipts = await Receipt.findAll({
+    where: {
+      printDate: {
+        [Op.between]: [new Date(now.getFullYear(), now.getMonth(), 1, now.getHours() + 3), new Date(now.getFullYear(), now.getMonth() + 1, 0, now.getHours() + 3)]
+      }
+    },
+    order: [['printDate', 'DESC']]
+  })
+  const total = await Receipt.sum('sum', {
+    where: {
+      printDate: {
+        [Op.between]: [new Date(now.getFullYear(), now.getMonth(), 1, now.getHours() + 3), new Date(now.getFullYear(), now.getMonth() + 1, 0, now.getHours() + 3)]
+      }
+    }
+  });
+  ctx.body={receipts: receipts, total: total}
+})
+
+router.post('/averageMonthSum', accessR, async(ctx:any) => {
+  var now;
+  const body = ctx.request.body
+  if (!body.targetMonth) {
+   now = new Date()
+  } else {
+   now = new Date(body.targetYear, body.targetMonth)
+  }
+  const receipts = await Receipt.findAll({
+    where: {
+      printDate: {
+        [Op.between]: [new Date(now.getFullYear(), now.getMonth(), 1, now.getHours() + 3), new Date(now.getFullYear(), now.getMonth() + 1, 0, now.getHours() + 3)]
+      }
+    },
+    order: [['printDate', 'DESC']]
+  })
+  const total = await Receipt.sum('sum', {
+    where: {
+      printDate: {
+        [Op.between]: [new Date(now.getFullYear(), now.getMonth(), 1, now.getHours() + 3), new Date(now.getFullYear(), now.getMonth() + 1, 0, now.getHours() + 3)]
+      }
+    }
+  });
+  const receiptslast = await Receipt.findAll({
+    where: {
+      printDate: {
+        [Op.between]: [new Date(now.getFullYear(), now.getMonth() - 1, 1, now.getHours() + 3), new Date(now.getFullYear(), now.getMonth(), 0, now.getHours() + 3)]
+      }
+    },
+    order: [['printDate', 'DESC']]
+  })
+  const totallast = await Receipt.sum('sum', {
+    where: {
+      printDate: {
+        [Op.between]: [new Date(now.getFullYear(), now.getMonth() - 1, 1, now.getHours() + 3), new Date(now.getFullYear(), now.getMonth(), 0, now.getHours() + 3)]
+      }
+    }
+  });
+  ctx.body={currentMonthAvg: total / (receipts.length), lastMonthAvg: totallast / (receipts.length)}
+})
+
+router.post('/averageDaySum', accessR, async(ctx:any) => {
+  var now;
+  const body = ctx.request.body
+  if (!body.targetMonth) {
+   now = new Date()
+  } else {
+   now = new Date(body.targetYear, body.targetMonth, 0)
+  }
+  const receipts = await Receipt.findAll({
+    where: {
+      printDate: {
+        [Op.between]: [new Date(now.getFullYear(), now.getMonth(), 1, now.getHours() + 3), new Date(now.getFullYear(), now.getMonth() + 1, 0, now.getHours() + 3)]
+      }
+    },
+    order: [['printDate', 'DESC']]
+  })
+  const total = await Receipt.sum('sum', {
+    where: {
+      printDate: {
+        [Op.between]: [new Date(now.getFullYear(), now.getMonth(), 1, now.getHours() + 3), new Date(now.getFullYear(), now.getMonth() + 1, 0, now.getHours() + 3)]
+      }
+    }
+  });
+  const receiptslast = await Receipt.findAll({
+    where: {
+      printDate: {
+        [Op.between]: [new Date(now.getFullYear(), now.getMonth() - 1, 1, now.getHours() + 3), new Date(now.getFullYear(), now.getMonth(), 0, now.getHours() + 3)]
+      }
+    },
+    order: [['printDate', 'DESC']]
+  })
+  const totallast = await Receipt.sum('sum', {
+    where: {
+      printDate: {
+        [Op.between]: [new Date(now.getFullYear(), now.getMonth() - 1, 1, now.getHours() + 3), new Date(now.getFullYear(), now.getMonth(), 0, now.getHours() + 3)]
+      }
+    }
+  });
+  ctx.body={currentMonthAvg: total / (new Date(now.getFullYear(),now.getMonth()+1, 0 ).getDate()), lastMonthAvg: totallast / (new Date(now.getFullYear(),now.getMonth(), 0 ).getDate())}
 })
 
 // router.post('/')

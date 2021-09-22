@@ -1,6 +1,9 @@
 # DigitalSkills2021
 For Kazan Digital Skills
-
+____
+Для просмотра готового продукта воспользуйтесь размещенным на хостинге проектом
+http://andreifarafonow.duckdns.org:81/checks/auth.html
+____
 #Installation steps
 
 _______________
@@ -19,3 +22,5 @@ _______________
 npm run seeds-up
 _______________
 npm start
+
+

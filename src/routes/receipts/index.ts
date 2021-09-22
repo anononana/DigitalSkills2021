@@ -315,7 +315,7 @@ router.post("/userList", accessR, async (ctx: any) => {
       },
     });
     if (user.limit < totaluser) {
-      greedyUsers.push(user);
+      greedyUsers.push({user, overlimit: totaluser - user.limit});
     }
   }
   console.log(new Date(now.getFullYear(), now.getMonth(), 0, now.getHours() + 3))

@@ -19,3 +19,6 @@ _______________
 npm run seeds-up
 _______________
 npm start
+
+
+Open checks/auth.html

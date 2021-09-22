@@ -5,6 +5,7 @@ import User from "../../db/models/User/User.model";
 import sequelize from "../../db/sequelize";
 import { checkLogin } from "../../middlewares/auth";
 import accessR from "../../middlewares/auth/accessR";
+var timeseries = require("timeseries-analysis");
 
 // import auth from './auth';
 // import user from './user'
@@ -119,7 +120,6 @@ router.post("/generalStat", accessR, async (ctx: any) => {
     },
   });
 
-
   ctx.body = { receipts: receipts, total: total };
 });
 
@@ -199,10 +199,6 @@ router.post("/averageMonthSum", accessR, async (ctx: any) => {
   };
 });
 
-
-
-
-
 router.post("/averageDaySum", accessR, async (ctx: any) => {
   var now;
   const body = ctx.request.body;
@@ -273,7 +269,13 @@ router.post("/averageDaySum", accessR, async (ctx: any) => {
       },
     },
   });
-  console.log(new Date(now.getFullYear(), now.getMonth(), 0, now.getHours() + 3))
+  if (new Date().getMonth() == now.getMonth()) {
+    return (ctx.body = {
+      currentMonthAvg: total / new Date().getDate(),
+      lastMonthAvg:
+        totallast / new Date(now.getFullYear(), now.getMonth(), 0).getDate(),
+    });
+  }
   ctx.body = {
     currentMonthAvg:
       total / new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate(),
@@ -281,9 +283,6 @@ router.post("/averageDaySum", accessR, async (ctx: any) => {
       totallast / new Date(now.getFullYear(), now.getMonth(), 0).getDate(),
   };
 });
-
-
-
 
 router.post("/userList", accessR, async (ctx: any) => {
   var greedyUsers: Object[] = [];
@@ -295,31 +294,76 @@ router.post("/userList", accessR, async (ctx: any) => {
   } else {
     now = new Date(body.targetYear, body.targetMonth, 0);
   }
-  console.log(now.getMonth())
   const users = await User.findAll();
   for (var user of users) {
     const totaluser = await Receipt.sum("sum", {
       where: {
         printDate: {
           [Op.between]: [
+            new Date(now.getFullYear(), now.getMonth(), 1, now.getHours() + 3),
             new Date(
               now.getFullYear(),
-              now.getMonth(),
-              1,
+              now.getMonth() + 1,
+              0,
               now.getHours() + 3
             ),
-            new Date(now.getFullYear(), now.getMonth() + 1, 0, now.getHours() + 3),
           ],
         },
         userId: user.id,
       },
     });
     if (user.limit < totaluser) {
-      greedyUsers.push({user, overlimit: totaluser - user.limit});
+      greedyUsers.push({ user, overlimit: totaluser - user.limit });
     }
   }
-  console.log(new Date(now.getFullYear(), now.getMonth(), 0, now.getHours() + 3))
   ctx.body = greedyUsers;
+});
+
+router.post("/forecast", accessR, async (ctx: any) => {
+  var data: Object[] = [];
+  var now: Date;
+  var sums: Object[] = [];
+  const body = ctx.request.body;
+  if (!body.targetMonth) {
+    now = new Date();
+  } else {
+    now = new Date(body.targetYear, body.targetMonth, 0);
+  }
+  for( var i=11; i >= 1; i--) {
+    const totaluser = await Receipt.sum("sum", {
+      where: {
+        printDate: {
+          [Op.between]: [
+            new Date(now.getFullYear(), now.getMonth() - i, 1, now.getHours() + 3),
+            new Date(
+              now.getFullYear(),
+              now.getMonth() - (i -1),
+              0,
+              now.getHours() + 3
+            ),
+          ],
+        },
+      },
+    });
+    sums.push([ new Date(now.getFullYear() ,now.getMonth() - i, 0).getTime(), totaluser])
+  }
+  var t     = new timeseries.main(sums);
+  var forecastDatapoint	= 11;	
+  var coeffs = t.ARMaxEntropy({
+    data:	t.data.slice(0,10)
+  });
+  t.smoother({period:4}).save('smoothed');
+  t.sliding_regression_forecast({sample:20, degree: 5});
+  var forecast	= 0;
+  for (var i=0;i<coeffs.length;i++) {
+    forecast -= t.data[10-i][1]*coeffs[i];
+  }
+  var processed = t.output();
+  console.log(sums)
+  console.log("forecast",forecast);
+  var chart_url = t.chart({main:true,points:[{color:'ff0000',point:20,series:0, main: true}]});
+  console.log(chart_url)
+  ctx.body = {forecast: forecast, chart_url: chart_url}
 });
 
 export default router;

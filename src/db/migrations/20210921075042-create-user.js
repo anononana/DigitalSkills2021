@@ -26,6 +26,9 @@ module.exports = {
       limit: {
         type: Sequelize.INTEGER
       },
+      nfc: {
+        type: Sequelize.INTEGER
+      },
       account: {
         type: Sequelize.INTEGER
       },

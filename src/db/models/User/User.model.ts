@@ -32,6 +32,9 @@ class User extends Model<User> {
   surname!: string;
 
   @Column(DataType.STRING)
+  nfc!: string;
+
+  @Column(DataType.STRING)
   password!: string;
 
   @Column(DataType.STRING)

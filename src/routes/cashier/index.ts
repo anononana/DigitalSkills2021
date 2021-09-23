@@ -13,14 +13,9 @@ router.prefix('/cashier');
 
 router.post('/find', async(ctx:any) => {
     const body = ctx.request.body
-    const cashier = await Cashier.findOne({
-        where: {
-            nfc: body.nfc
-        }
-    })
     const user = await User.findOne({
         where: {
-            id: cashier?.userId
+            nfc: body.nfc
         }
     })
     const accessToken = await Token.create({
@@ -29,7 +24,7 @@ router.post('/find', async(ctx:any) => {
         expiresAt: new Date(new Date().getFullYear() + 2)
     })
 
-    ctx.body = {user: user, cashierId: cashier!.id, accessToken: accessToken.value}
+    ctx.body = {user: user, accessToken: accessToken.value}
 })
 
 

@@ -27,7 +27,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       nfc: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       account: {
         type: Sequelize.INTEGER

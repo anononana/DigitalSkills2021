@@ -21,4 +21,10 @@ _______________
 npm start
 
 
-Open checks/auth.html
+Для запуска дашборда:
+Сохранить содержимое папки DigitalSkills2021/Dashboard/Dashboard/Dashboard/bin/Debug/
+Запустить Dashboard.exe
+
+AR:
+Перейти с телефона по адресу https://olhovatka46.ru/geo
+Для разворачивания приложения AR требуется SSL сертификат

@@ -7,24 +7,20 @@ import { now } from 'sequelize/types/lib/utils';
 import { CITEXT } from 'sequelize/types';
 import Cashier from '../../db/models/Cashiers/Cashier.model';
 import { generateWallet, Currency, generateAddressFromXPub, generatePrivateKeyFromMnemonic, btcGetBalance, sendBitcoinTransaction } from '@tatumio/tatum';
+import Cafe from '../../db/models/Cafes/Cafe.model';
 
 const router = new Router();
 
-router.prefix('/cashier');
+router.prefix('/cafe');
 
-router.post('/find', async(ctx:any) => {
-    const body = ctx.request.body
-    const user = await User.findOne({
-        where: {
-            nfc: body.nfc
-        }
-    })
-    const accessToken = await Token.create({
-        value: crypto.randomBytes(20).toString('hex'),
-        userId: user!.id,
-        expiresAt: new Date(new Date().getFullYear() + 2)
-    })
-    ctx.body = {user: user, accessToken: accessToken.value}
+router.get('/', async(ctx:any) => {
+    var balances: string[] = [];
+    const cafes = await Cafe.findAll()
+    for (var cafe of cafes) {
+        const balance = await btcGetBalance(cafe.address);
+        balances.push(balance.incoming)
+    }
+    ctx.body = {cafes, balances}
 })
 
 router.post('/wallet', async(ctx:any) => {

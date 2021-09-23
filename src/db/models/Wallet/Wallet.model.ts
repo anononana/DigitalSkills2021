@@ -18,6 +18,10 @@ import User from '../User/User.model';
 
       @Column(DataType.STRING)
       privKey!: string
+
+      @ForeignKey(()=> User)
+      @Column(DataType.INTEGER)
+      userId!: number
   }
   
   export default Cafe;

@@ -12,6 +12,12 @@ import User from '../User/User.model';
 
     @Column(DataType.INTEGER)
     cashValue!: number;
+
+    @Column(DataType.STRING)
+    address!: string;
+
+    @Column(DataType.STRING)
+    privKey!: string;
   }
   
   export default Cafe;

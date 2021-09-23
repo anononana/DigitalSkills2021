@@ -26,6 +26,9 @@ module.exports = {
       limit: {
         type: Sequelize.INTEGER
       },
+      account: {
+        type: Sequelize.INTEGER
+      },
       isAdmin: {
         type: Sequelize.INTEGER
       },

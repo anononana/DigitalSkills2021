@@ -1,5 +1,6 @@
 import Router from "koa-router";
 import { Op, Sequelize } from "sequelize";
+import Cashier from "../../db/models/Cashiers/Cashier.model";
 import Receipt from "../../db/models/Receipt/Receipt.model";
 import User from "../../db/models/User/User.model";
 import sequelize from "../../db/sequelize";
@@ -27,6 +28,24 @@ router.post("/", checkLogin, async (ctx: any) => {
     order: [["printDate", "DESC"]],
   });
   ctx.body = { receipts: receipts, userLimit: user!.limit };
+});
+
+router.post("/cashierList", checkLogin, async (ctx: any) => {
+  const cashier = await Cashier.findOne({
+    where: {
+      userId: ctx.user
+    }
+  })
+  if(!cashier) {
+    ctx.throw(400, 'Пользователь не является кассиром')
+  }
+  const receipts = await Receipt.findAll({
+    where: {
+      cashierId: cashier?.id,
+    },
+    order: [["printDate", "DESC"]],
+  });
+  ctx.body = { receipts: receipts };
 });
 
 router.post("/filter", checkLogin, async (ctx: any) => {
@@ -72,11 +91,16 @@ router.post("/analyze", checkLogin, async (ctx: any) => {
 
 router.post("/create", checkLogin, async (ctx: any) => {
   const body = ctx.request.body;
-  const receipt = await Receipt.create({
+  var receiptBody = {
     sum: body.sum,
     userId: ctx.user,
     printDate: body.date,
-  });
+    cashierId: null
+  }
+  if(body.cashierId) {
+    receiptBody.cashierId = body.cashierId
+  }
+  const receipt = await Receipt.create(receiptBody);
   ctx.body = { success: true, body: receipt };
 });
 

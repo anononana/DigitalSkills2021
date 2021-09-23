@@ -1,24 +1,15 @@
 import { Table, Column, Model, DataType, Unique, AllowNull, Scopes,
     HasMany, ForeignKey, BelongsTo, IsEmail, Default, DefaultScope } from 'sequelize-typescript';
-import Cashier from '../Cashiers/Cashier.model';
 import User from '../User/User.model';
 @Table({
   paranoid: true,
   timestamps: true, 
 })
-  class Receipt extends Model<Receipt> {
+  class Cashier extends Model<Cashier> {
     @AllowNull(false)
-    @Column(DataType.INTEGER)
-    sum!: number;
-  
+    @Column(DataType.STRING)
+    nfc!: string;
 
-    @AllowNull(false)
-    @Column(DataType.DATE)
-    printDate!: Date
-
-    @ForeignKey(() => Cashier)
-    @Column(DataType.INTEGER)
-    cashierId!: number;
 
     @ForeignKey(() => User)
     @AllowNull(false)
@@ -29,4 +20,4 @@ import User from '../User/User.model';
     user!: User;
   }
   
-  export default Receipt;
+  export default Cashier;

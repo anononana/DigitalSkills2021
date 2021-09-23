@@ -9,6 +9,7 @@ module.exports = {
       surname: 'Doe',
       email: 'example@example.com',
       limit: 2000,
+      account: 300,
       isAdmin: 1,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -82,8 +83,7 @@ module.exports = {
       isAdmin: 0,
       createdAt: new Date(),
       updatedAt: new Date() 
-    },
-    , {
+    }, {
       login: "vvv2",
       password: "123456",
       name: 'Гендальф',

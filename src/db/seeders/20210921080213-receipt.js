@@ -8789,6 +8789,7 @@ module.exports = {
       {
         sum: 439,
         userId: 9,
+        cashierId: 1,
         printDate: new Date("2021-07-10T00:00:00"),
         createdAt: new Date(),
         updatedAt: new Date(),

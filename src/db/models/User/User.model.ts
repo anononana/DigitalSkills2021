@@ -43,6 +43,10 @@ class User extends Model<User> {
   @Column(DataType.INTEGER)
   isAdmin!: number;
 
+  @Default(0)
+  @Column(DataType.INTEGER)
+  account!: number;
+
   @HasMany(() => Receipt, 'userId')
   receipts!: Receipt[];
 

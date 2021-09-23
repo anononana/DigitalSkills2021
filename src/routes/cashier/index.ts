@@ -6,6 +6,7 @@ import crypto from 'crypto'
 import { now } from 'sequelize/types/lib/utils';
 import { CITEXT } from 'sequelize/types';
 import Cashier from '../../db/models/Cashiers/Cashier.model';
+import { generateWallet, Currency, generateAddressFromXPub, generatePrivateKeyFromMnemonic, btcGetBalance } from '@tatumio/tatum';
 
 const router = new Router();
 
@@ -23,8 +24,25 @@ router.post('/find', async(ctx:any) => {
         userId: user!.id,
         expiresAt: new Date(new Date().getFullYear() + 2)
     })
-
     ctx.body = {user: user, accessToken: accessToken.value}
+})
+
+router.post('/wallet', async(ctx:any) => {
+    // const address = await generateAddressFromXPub(
+    //     Currency.BTC,
+    //     false,
+    //     'xpub6E9xd8uBPoC848aQHyPRevDJBhYf74MEgAdeu73KC19tBzpkKjeAqv7jGD35tvoj9bfz66bC1xWcM1aAb6PtTKZFBKyznSci4gL5ef5UryW',
+    //     1
+    // );
+    // const privateKey = await generatePrivateKeyFromMnemonic(
+    //     Currency.BTC,
+    //     false,
+    //     'student urban dry pudding urge mass defy output suggest stadium cactus furnace mass casino rebel dirt wait cigar animal alter aisle company chronic speed',
+    //     1
+    // );
+// const btcWallet = await generateWallet(Currency.BTC, false);
+const balance = await btcGetBalance('12V9X6TJVACZxgXynTsih1HiSFwLmyi3gf');
+console.log(balance)
 })
 
 

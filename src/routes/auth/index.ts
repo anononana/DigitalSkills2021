@@ -28,7 +28,7 @@ router.post('/login', async (ctx: any) => {
           userId: user.id,
           expiresAt: exp
       })
-      return ctx.body = {success:true, accessToken: accessToken.value}
+      return ctx.body = {success:true,user: user, accessToken: accessToken.value}
   }
   ctx.throw(403, {errmsg: 'Неверные данные'});
   

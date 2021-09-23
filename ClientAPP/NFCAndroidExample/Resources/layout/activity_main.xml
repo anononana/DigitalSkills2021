@@ -1,0 +1,113 @@
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10pt"
+        android:id="@+id/plash"
+        >
+        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="15pt"
+        android:text="LOGIN"
+        android:textAlignment="center"
+        android:textSize="9pt"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/login"
+            android:text="JohnDoe"/>
+        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="15pt"
+        android:text="PASS"
+        android:textAlignment="center"
+        android:textSize="9pt"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/pass"
+            android:text="123456"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40pt"
+            android:id="@+id/ok"
+            android:text="OK"/>
+        
+     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/lay"
+        android:visibility="gone">
+
+        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="22pt"
+        android:text="Hello"
+        android:textAlignment="center"
+        android:textSize="12pt"
+            android:id="@+id/fullName"
+            android:layout_marginTop="20pt"
+            android:textColor="@android:color/black"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="15pt"
+        android:text="Hello"
+        android:textAlignment="center"
+        android:textSize="9pt"
+            android:id="@+id/time"/>
+
+        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="15pt"
+        android:textAlignment="center"
+        android:textSize="9pt"
+            android:id="@+id/sum"
+            android:layout_marginTop="20pt"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/sumInput"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40pt"
+            android:id="@+id/send"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="600pt">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                    android:id="@+id/history"/>
+            </LinearLayout>
+         </ScrollView>
+        
+
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Wait NFC..."
+        android:gravity="center"
+        android:textSize="12pt"
+        android:id="@+id/waiter"
+        android:textColor="@android:color/black"
+        android:background="@android:color/white"
+        android:visibility="gone"/>
+    
+</android.support.design.widget.CoordinatorLayout>
